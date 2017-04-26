@@ -10,14 +10,14 @@ def events_from_file(filename):
             line = f.readline()
             if not line:
                 break
-            event_wrapper = json.loads(line)
-            yield json.loads(event_wrapper['message'])
+            yield json.loads(line)
 
 
-def process(filename):
+def process(events):
     """group CloudTrail events by invoking ARN and required iam permission"""
     events_by_arn = defaultdict(list)
-    for event in events_from_file(filename):
+    for event_wrapper in events:
+        event = json.loads(event_wrapper['message'])
         arn = invoker_arn(event)
         event_name = event['eventName']
         event_source = re.sub(r'([^.]+).*', '\\1', event['eventSource'])  # drop amazonaws.com suffix
@@ -47,4 +47,5 @@ def invoker_arn(event):
     return arn
 
 
-process('events.json')
+if __name__ == "__main__":
+    process(events_from_file('events.json'))
