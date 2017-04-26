@@ -1,7 +1,7 @@
 import boto3
 import time
 import json
-import group
+import group_by_arn
 
 client = boto3.client('logs')
 
@@ -44,4 +44,4 @@ if __name__ == "__main__":
     startTime = int(time.time() * 1000) - 4 * 3600 * 1000
     endTime = startTime + (10 * 60 * 1000)
 
-    group.process(save_events(download_events(startTime, endTime), 'events.json'))
+    group_by_arn.process(save_events(download_events(startTime, endTime), 'events.json'))
