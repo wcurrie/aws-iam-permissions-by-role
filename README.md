@@ -7,3 +7,7 @@ Idea:
 3. reduce privileges
 4. try using role again
 5. weep or move on to next task
+
+Setup:
+
+Needs CloudTrail enabled and publishing logs to a CloudWatch Logs group named 'CloudTrail/logs'

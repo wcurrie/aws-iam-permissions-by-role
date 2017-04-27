@@ -41,7 +41,7 @@ def save_events(events, filename):
 # Download recent CloudTrail events published to CloudWatch logs
 
 if __name__ == "__main__":
-    startTime = int(time.time() * 1000) - 4 * 3600 * 1000
-    endTime = startTime + (10 * 60 * 1000)
+    startTime = int(time.time() * 1000) - 1 * 3600 * 1000
+    endTime = int(time.time() * 1000)
 
     group_by_arn.process(save_events(download_events(startTime, endTime), 'events.json'))
