@@ -18,10 +18,15 @@ def process(events):
     events_by_arn = defaultdict(list)
     for event_wrapper in events:
         event = json.loads(event_wrapper['message'])
-        arn = invoker_arn(event)
-        event_name = event['eventName']
-        event_source = re.sub(r'([^.]+).*', '\\1', event['eventSource'])  # drop amazonaws.com suffix
-        events_by_arn[arn].append(event_source + ":" + event_name)
+        try:
+            arn = invoker_arn(event)
+            event_name = event['eventName']
+            event_source = re.sub(r'([^.]+).*', '\\1', event['eventSource'])  # drop amazonaws.com suffix
+            events_by_arn[arn].append(event_source + ":" + event_name)
+        except Exception as e:
+            print("Ignoring error")
+            print(e)
+            pass
 
     for arn, events in events_by_arn.items():
         counts_by_event = {}
@@ -42,8 +47,10 @@ def invoker_arn(event):
         arn = event['userIdentity']['arn']
     elif event['userIdentity']['type'] == 'AssumedRole':
         arn = event['userIdentity']['sessionContext']['sessionIssuer']['arn']
+    elif event['userIdentity']['type'] == 'Root':
+        arn = event['userIdentity']['arn']
     else:
-        raise "Dunno about {0}".format(str(event))
+        raise Exception("Dunno about {0}".format(json.dumps(event)))
     return arn
 
 
