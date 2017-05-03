@@ -5,6 +5,7 @@ import group_by_arn
 
 client = boto3.client('logs')
 
+# depends on CloudTrail being configured to push events to a CloudWatch logs group name CloudTrail/logs
 
 def download_events(start_time, end_time):
     """download CloudTrail event published to a CloudWatch logs group"""
